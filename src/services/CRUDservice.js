@@ -1,6 +1,7 @@
 import e from "express";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
+import { raw } from "body-parser";
 let saltRounds = 10;
 let salt = bcrypt.genSaltSync(saltRounds);
 
@@ -51,6 +52,71 @@ let createNewUser = async (data) => {
     }
   });
 };
+let getAllUsers = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let users = await db.User.findAll({
+        raw: true,
+      });
+      if (!users) {
+        reject("Error when getting all users");
+      } else {
+        resolve(users);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let getInfoUserById = async (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!userId) {
+        reject("User id is required");
+      }
+      let user = await db.User.findOne({
+        where: { id: userId },
+        raw: true,
+      });
+      if (!user) {
+        reject("User not found");
+      } else {
+        resolve(user);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let updateUserData = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.id) {
+        reject("User id is required");
+      }
+      let user = await db.User.findOne({
+        where: { id: data.id },
+      });
+      if (!user) {
+        reject("User not found");
+      }
+      user.firstName = data.firstName;
+      user.lastName = data.lastName;
+      user.address = data.address;
+      user.phoneNumber = data.phoneNumber;
+      await user.save();
+      let listUser = await db.User.findAll({
+        raw: true,
+      });
+      resolve(listUser);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   createNewUser: createNewUser,
+  getAllUsers: getAllUsers,
+  updateUserData: updateUserData,
+  getInfoUserById: getInfoUserById,
 };

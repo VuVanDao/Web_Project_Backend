@@ -19,9 +19,34 @@ let postCRUD = async (req, res) => {
   console.log("message", message);
   return res.render("crud.ejs");
 };
+let displayCRUD = async (req, res) => {
+  try {
+    let data = await CRUDService.getAllUsers();
+    return res.render("displayCRUD.ejs", { data: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+let updateCRUD = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await CRUDService.getInfoUserById(id);
+    return res.render("updateCRUD.ejs", { user: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+let getUpdateUser = async (req, res) => {
+  let data = req.body;
+  let message = await CRUDService.updateUserData(data);
+  return res.render("displayCRUD.ejs", { data: message });
+};
 module.exports = {
   getHomePage: getHomePage,
   getAboutPage: getAboutPage,
   getCRUD: getCRUD,
   postCRUD: postCRUD,
+  displayCRUD: displayCRUD,
+  updateCRUD: updateCRUD,
+  getUpdateUser: getUpdateUser,
 };
