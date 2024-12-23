@@ -9,6 +9,8 @@ let initWebRoutes = (app) => {
   router.get("/get-crud", homeController.displayCRUD);
   router.get("/update-crud/:id", homeController.updateCRUD);
   router.post("/put-crud", homeController.getUpdateUser);
+  router.get("/delete-crud", homeController.deleteCRUD);
+  router.post("/delete-crud-2", homeController.deleteUser);
   return app.use("/", router);
 };
 module.exports = initWebRoutes;

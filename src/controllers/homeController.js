@@ -41,6 +41,20 @@ let getUpdateUser = async (req, res) => {
   let message = await CRUDService.updateUserData(data);
   return res.render("displayCRUD.ejs", { data: message });
 };
+let deleteCRUD = async (req, res) => {
+  let userId = req.query.id;
+  if (userId) {
+    let data = await CRUDService.getInfoUserById(userId);
+    return res.render("deleteCRUD.ejs", { user: data });
+  } else {
+    return res.send("User not found");
+  }
+};
+let deleteUser = async (req, res) => {
+  let userId = req.body.id;
+  let data = await CRUDService.deleteUserById(userId);
+  return res.render("displayCRUD.ejs", { data: data });
+};
 module.exports = {
   getHomePage: getHomePage,
   getAboutPage: getAboutPage,
@@ -49,4 +63,6 @@ module.exports = {
   displayCRUD: displayCRUD,
   updateCRUD: updateCRUD,
   getUpdateUser: getUpdateUser,
+  deleteCRUD: deleteCRUD,
+  deleteUser: deleteUser,
 };

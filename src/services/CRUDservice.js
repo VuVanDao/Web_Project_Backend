@@ -114,9 +114,32 @@ let updateUserData = async (data) => {
     }
   });
 };
+let deleteUserById = async (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!userId) {
+        reject("User id is required");
+      }
+      let user = await db.User.findOne({
+        where: { id: userId },
+      });
+      if (!user) {
+        reject("User not found");
+      }
+      await user.destroy();
+      let listUser = await db.User.findAll({
+        raw: true,
+      });
+      resolve(listUser);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   createNewUser: createNewUser,
   getAllUsers: getAllUsers,
   updateUserData: updateUserData,
   getInfoUserById: getInfoUserById,
+  deleteUserById: deleteUserById,
 };
