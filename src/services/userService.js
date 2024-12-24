@@ -17,6 +17,7 @@ let handleUserLogin = async (email, password) => {
       } else {
         UserData.errCode = 2;
         UserData.errMessage = "Email or password not correct";
+        UserData.user = {};
         resolve(UserData);
       }
     } catch (error) {
