@@ -1,6 +1,7 @@
 import express from "express";
 let router = express.Router();
 import homeController from "../controllers/homeController";
+import userController from "../controllers/userController";
 let initWebRoutes = (app) => {
   router.get("/", homeController.getHomePage);
   router.get("/about", homeController.getAboutPage);
@@ -11,6 +12,9 @@ let initWebRoutes = (app) => {
   router.post("/put-crud", homeController.getUpdateUser);
   router.get("/delete-crud", homeController.deleteCRUD);
   router.post("/delete-crud-2", homeController.deleteUser);
+  router.get("/yugioh", homeController.getInformation);
+
+  router.post("/api/login", userController.handleLogin);
   return app.use("/", router);
 };
 module.exports = initWebRoutes;

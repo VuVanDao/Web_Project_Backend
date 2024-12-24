@@ -1,9 +1,8 @@
-import db from "../models/index";
 import CRUDService from "../services/CRUDservice";
 let getHomePage = async (req, res) => {
   try {
-    let data = await db.User.findAll();
-    return res.render("homePage.ejs", { data: JSON.stringify(data) });
+    let data = await CRUDService.getInformation();
+    return res.render("homePage.ejs", { data: data });
   } catch (error) {
     console.log(error);
   }
@@ -55,6 +54,10 @@ let deleteUser = async (req, res) => {
   let data = await CRUDService.deleteUserById(userId);
   return res.render("displayCRUD.ejs", { data: data });
 };
+let getInformation = async (req, res) => {
+  let data = await CRUDService.getInformation();
+  return res.render("homePage.ejs", { data: data });
+};
 module.exports = {
   getHomePage: getHomePage,
   getAboutPage: getAboutPage,
@@ -65,4 +68,5 @@ module.exports = {
   getUpdateUser: getUpdateUser,
   deleteCRUD: deleteCRUD,
   deleteUser: deleteUser,
+  getInformation: getInformation,
 };

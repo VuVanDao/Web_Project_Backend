@@ -60,7 +60,7 @@
               <a class="dropdown-item" href="/get-crud">Display</a>
               <a class="dropdown-item" href="#">Another action</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
+              <a class="dropdown-item" href="/yugioh">Something else here</a>
             </div>
           </li>
           <li class="nav-item">
@@ -81,6 +81,12 @@
       </div>
     </nav>
     <h1>Hello</h1>
-    <%= data%>
+    <% for(let i=0;i < data.data.length;i++) {%>
+    <h6><%= data.data[i].name%></h6>
+    <h6><%= data.data[i].level%></h6>
+    <h6><%= data.data[i].atk%></h6>
+    <h6><%= data.data[i].def%></h6>
+    <hr />
+    <%}%>
   </body>
 </html>

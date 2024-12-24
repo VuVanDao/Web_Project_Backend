@@ -1,7 +1,8 @@
-import e from "express";
+import express from "express";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { raw } from "body-parser";
+import axios from "axios";
 let saltRounds = 10;
 let salt = bcrypt.genSaltSync(saltRounds);
 
@@ -136,10 +137,28 @@ let deleteUserById = async (userId) => {
     }
   });
 };
+let getInformation = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // https://db.ygoprodeck.com/api/v7/cardsets.php
+      // https://db.ygoprodeck.com/api/v7/archetypes.php
+      const response = await axios
+        .get(
+          "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=Dark Magician"
+        )
+        .then((response) => {
+          resolve(response.data);
+        });
+    } catch (error) {
+      console.error("Lỗi:", error);
+    }
+  });
+};
 module.exports = {
   createNewUser: createNewUser,
   getAllUsers: getAllUsers,
   updateUserData: updateUserData,
   getInfoUserById: getInfoUserById,
   deleteUserById: deleteUserById,
+  getInformation: getInformation,
 };
