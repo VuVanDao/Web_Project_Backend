@@ -1,6 +1,8 @@
 import db from "../models/index";
 import axios from "axios";
 import bcrypt from "bcryptjs";
+import { raw } from "body-parser";
+import { where } from "sequelize";
 let saltRounds = 10;
 let salt = bcrypt.genSaltSync(saltRounds);
 let handleUserLogin = async (email, password) => {
@@ -15,8 +17,8 @@ let handleUserLogin = async (email, password) => {
         UserData.user = EmailIsExits;
         resolve(UserData);
       } else {
-        UserData.errCode = 2;
-        UserData.errMessage = "Email or password not correct";
+        UserData.errCode = 1;
+        UserData.errMessage = "Email or password not correct !!!!!";
         UserData.user = {};
         resolve(UserData);
       }
@@ -67,6 +69,62 @@ let checkUserPassword = async (email, password) => {
     }
   });
 };
+let handleGetAllUser = async (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let users = "";
+      if (userId === "ALL" || userId === "all") {
+        let data = await db.User.findAll({
+          raw: true,
+          attributes: {
+            exclude: ["password"],
+          },
+        });
+        if (data && data.length > 0) {
+          users = data;
+          resolve({
+            errCode: 0,
+            errMessage: "Found all user",
+            users,
+          });
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: "Not found any user",
+            users,
+          });
+        }
+      } else {
+        let data = await db.User.findAll({
+          raw: true,
+          where: {
+            id: userId,
+          },
+          attributes: {
+            exclude: ["password"],
+          },
+        });
+        if (data && data.length > 0) {
+          users = data;
+          resolve({
+            errCode: 0,
+            errMessage: "Found user with id " + userId,
+            users,
+          });
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: "Not found any user",
+            users,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
+  handleGetAllUser: handleGetAllUser,
 };
