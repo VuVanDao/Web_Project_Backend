@@ -124,7 +124,128 @@ let handleGetAllUser = async (userId) => {
     }
   });
 };
+let hashUserPassword = (password) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let hash = await bcrypt.hashSync(password, salt);
+      resolve(hash);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let handleCreateNewUser = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data) {
+        reject({
+          errCode: 2,
+          errMessage: "Server need data to create user",
+        });
+      }
+      let hashPassword = await hashUserPassword(data.password);
+      let checkUserEmailIsExist = await checkUserEmail(data.email);
+      if (!checkUserEmailIsExist) {
+        let user = await db.User.create({
+          email: data.email,
+          password: hashPassword,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          address: data.address,
+          phoneNumber: data.phoneNumber,
+          gender: data.gender === "1" ? true : false,
+          roleId: data.roleId,
+        });
+        if (!user) {
+          reject({
+            errCode: 1,
+            errMessage: "Cannot create user, something happened",
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "User created",
+          });
+        }
+      } else {
+        resolve({
+          errCode: 3,
+          errMessage: "Email is exist",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let handleUpdateAUser = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.id) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing id",
+        });
+      }
+      let user = await db.User.findOne({
+        where: { id: data.id },
+      });
+      if (!user) {
+        resolve({
+          errCode: 2,
+          errMessage: "Not found user with id:" + data.id,
+        });
+      } else {
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
+        user.address = data.address;
+        user.phoneNumber = data.phoneNumber;
+        await user.save();
+        // let listUser = await db.User.findAll({
+        //   raw: true,
+        // });
+        // resolve(listUser);
+        resolve({
+          errCode: 0,
+          errMessage: "Update user complete",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let handleDeleteAUser = async (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!userId) {
+        resolve({ errCode: 1, errMessage: "Missing userId" });
+      }
+      let user = await db.User.findOne({
+        where: { id: userId },
+      });
+      if (!user) {
+        resolve({ errCode: 1, errMessage: "Not found user with id:" + userId });
+      } else {
+        await user.destroy();
+        resolve({
+          errCode: 0,
+          errMessage: "Delete user complete",
+        });
+      }
+      // let listUser = await db.User.findAll({
+      //   raw: true,
+      // });
+      // resolve(listUser);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
+  handleCreateNewUser,
+  handleUpdateAUser,
+  handleDeleteAUser,
 };

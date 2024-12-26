@@ -16,7 +16,7 @@ let handleLogin = async (req, res) => {
   });
 };
 let handleGetAllUser = async (req, res) => {
-  let id = req.body.id; //all,id
+  let id = req.query.id; //all,id
   if (!id) {
     return res.status(200).json({
       errCode: 2,
@@ -31,7 +31,55 @@ let handleGetAllUser = async (req, res) => {
     userData: users.users,
   });
 };
+let handleCreateNewUser = async (req, res) => {
+  if (req.body) {
+    let result = await userService.handleCreateNewUser(req.body);
+    if (result) {
+      return res.status(200).json({
+        errCode: result.errCode,
+        errMessage: result.errMessage,
+      });
+    }
+  } else {
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "No data to create user",
+    });
+  }
+};
+let handleUpdateAUser = async (req, res) => {
+  let id = req.body.id;
+  if (!id) {
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Missing id to do this action",
+    });
+  } else {
+    let result = await userService.handleUpdateAUser(req.body);
+    return res.status(200).json({
+      errCode: result.errCode,
+      errMessage: result.errMessage,
+    });
+  }
+};
+let handleDeleteAUser = async (req, res) => {
+  let id = req.query.id;
+  if (!id) {
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Missing id to do this action",
+    });
+  } else {
+    let result = await userService.handleDeleteAUser(id);
+    if (result) {
+      return res.status(200).json(result);
+    }
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
+  handleCreateNewUser: handleCreateNewUser,
+  handleUpdateAUser,
+  handleDeleteAUser,
 };
