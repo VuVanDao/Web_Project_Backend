@@ -58,6 +58,14 @@ let getInformation = async (req, res) => {
   let data = await CRUDService.getInformation();
   return res.render("homePage.ejs", { data: data });
 };
+let getInformationSearch = async (req, res) => {
+  let data = await CRUDService.getInformationSearch(req.query.id);
+  return res.render("homePage.ejs", { data: data });
+};
+let getInformationById = async (req, res) => {
+  let data = await CRUDService.getInformationById(req.query.id);
+  return res.render("detailCard.ejs", { data: data });
+};
 module.exports = {
   getHomePage: getHomePage,
   getAboutPage: getAboutPage,
@@ -69,4 +77,6 @@ module.exports = {
   deleteCRUD: deleteCRUD,
   deleteUser: deleteUser,
   getInformation: getInformation,
+  getInformationSearch,
+  getInformationById,
 };

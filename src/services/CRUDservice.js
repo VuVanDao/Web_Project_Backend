@@ -3,9 +3,21 @@ import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { raw } from "body-parser";
 import axios from "axios";
+import CryptoJS from "crypto-js";
+require("dotenv").config();
+
 let saltRounds = 10;
 let salt = bcrypt.genSaltSync(saltRounds);
-
+const publicKey = process.env.publicKey;
+const privateKey = process.env.privateKey;
+const ts = Date.now().toString();
+const hash = CryptoJS.MD5(ts + privateKey + publicKey).toString();
+const params = {
+  ts: ts,
+  apikey: publicKey,
+  hash: hash,
+  limit: 10,
+};
 let hashUserPassword = (password) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -142,9 +154,10 @@ let getInformation = async () => {
     try {
       // https://db.ygoprodeck.com/api/v7/cardsets.php
       // https://db.ygoprodeck.com/api/v7/archetypes.php
+      // https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=Dark Magician
       const response = await axios
         .get(
-          "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=Dark Magician"
+          `https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=Dark Magician`
         )
         .then((response) => {
           resolve(response.data);
@@ -154,6 +167,41 @@ let getInformation = async () => {
     }
   });
 };
+let getInformationSearch = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // https://db.ygoprodeck.com/api/v7/cardsets.php
+      // https://db.ygoprodeck.com/api/v7/archetypes.php
+      // https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=Dark Magician
+      console.log("data", data);
+      const response = await axios
+        .get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${data}`)
+        .then((response) => {
+          resolve(response.data);
+        });
+    } catch (error) {
+      console.error("Lỗi:", error);
+    }
+  });
+};
+let getInformationById = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // https://db.ygoprodeck.com/api/v7/cardsets.php
+      // https://db.ygoprodeck.com/api/v7/archetypes.php
+      // https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=Dark Magician
+      console.log("data", data);
+      const response = await axios
+        .get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${data}`)
+        .then((response) => {
+          resolve(response.data);
+        });
+    } catch (error) {
+      console.error("Lỗi:", error);
+    }
+  });
+};
+let getCharacterMarvel = async () => {};
 module.exports = {
   createNewUser: createNewUser,
   getAllUsers: getAllUsers,
@@ -161,4 +209,6 @@ module.exports = {
   getInfoUserById: getInfoUserById,
   deleteUserById: deleteUserById,
   getInformation: getInformation,
+  getInformationSearch,
+  getInformationById,
 };

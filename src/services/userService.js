@@ -138,7 +138,7 @@ let handleCreateNewUser = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!data) {
-        reject({
+        resolve({
           errCode: 2,
           errMessage: "Server need data to create user",
         });
@@ -157,7 +157,7 @@ let handleCreateNewUser = async (data) => {
           roleId: data.roleId,
         });
         if (!user) {
-          reject({
+          resolve({
             errCode: 1,
             errMessage: "Cannot create user, something happened",
           });
@@ -200,11 +200,9 @@ let handleUpdateAUser = async (data) => {
         user.lastName = data.lastName;
         user.address = data.address;
         user.phoneNumber = data.phoneNumber;
+        user.gender = data.gender;
+        user.roleId = data.roleId;
         await user.save();
-        // let listUser = await db.User.findAll({
-        //   raw: true,
-        // });
-        // resolve(listUser);
         resolve({
           errCode: 0,
           errMessage: "Update user complete",

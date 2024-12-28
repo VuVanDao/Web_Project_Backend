@@ -13,6 +13,8 @@ let initWebRoutes = (app) => {
   router.get("/delete-crud", homeController.deleteCRUD);
   router.post("/delete-crud-2", homeController.deleteUser);
   router.get("/yugioh", homeController.getInformation);
+  router.get("/yugioh-search/", homeController.getInformationSearch);
+  router.get("/yugioh-detail/", homeController.getInformationById);
 
   router.post("/api/login", userController.handleLogin);
   router.get("/api/get-all-users", userController.handleGetAllUser);
