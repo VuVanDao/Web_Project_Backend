@@ -16,7 +16,7 @@ const params = {
   ts: ts,
   apikey: publicKey,
   hash: hash,
-  limit: 10,
+  limit: 1,
 };
 let hashUserPassword = (password) => {
   return new Promise(async (resolve, reject) => {
@@ -201,7 +201,38 @@ let getInformationById = async (data) => {
     }
   });
 };
-let getCharacterMarvel = async () => {};
+let getCharacterMarvel = async () => {
+  return new Promise(async (resolve, reject) => {
+    axios
+      .get("https://gateway.marvel.com/v1/public/characters", { params })
+      .then((response) => {
+        // console.log("res", response.data.data);
+        //   id: 1011334,
+        // name: '3-D Man',
+        // description: '',
+        // modified: '2014-04-29T14:18:17-0400',
+        // thumbnail: [Object],
+        // resourceURI: 'http://gateway.marvel.com/v1/public/characters/1011334',
+        // comics: [Object],
+        // series: [Object],
+        // stories: [Object],
+        // events: [Object],
+        // urls: [Array]
+        const characters = response.data.data.results;
+        console.log(">>>", characters);
+
+        if (characters && characters.length > 0) {
+          resolve(characters);
+        }
+        // characters.map((item, index) => {
+        //   console.log("Character:", item.id);
+        //   console.log("Character:", item.name);
+        // });
+      })
+      .catch((error) => console.error("Error:", error));
+  });
+};
+
 module.exports = {
   createNewUser: createNewUser,
   getAllUsers: getAllUsers,
@@ -211,4 +242,5 @@ module.exports = {
   getInformation: getInformation,
   getInformationSearch,
   getInformationById,
+  getCharacterMarvel,
 };

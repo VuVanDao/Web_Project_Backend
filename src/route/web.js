@@ -12,9 +12,14 @@ let initWebRoutes = (app) => {
   router.post("/put-crud", homeController.getUpdateUser);
   router.get("/delete-crud", homeController.deleteCRUD);
   router.post("/delete-crud-2", homeController.deleteUser);
+
+  router.get("/allCode", userController.getAllCode);
+
   router.get("/yugioh", homeController.getInformation);
   router.get("/yugioh-search/", homeController.getInformationSearch);
   router.get("/yugioh-detail/", homeController.getInformationById);
+
+  router.get("/marvel", homeController.getCharacterMarvel);
 
   router.post("/api/login", userController.handleLogin);
   router.get("/api/get-all-users", userController.handleGetAllUser);

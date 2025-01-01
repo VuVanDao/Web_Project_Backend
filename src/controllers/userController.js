@@ -1,3 +1,4 @@
+import e from "express";
 import userService from "../services/userService";
 let handleLogin = async (req, res) => {
   let email = req.body.email;
@@ -76,10 +77,20 @@ let handleDeleteAUser = async (req, res) => {
     }
   }
 };
+let getAllCode = async (req, res) => {
+  try {
+    let data = await userService.getAllCodeService(req.query.type);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log("Error at userController: " + error);
+    return res.status(200).json(data);
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
   handleCreateNewUser: handleCreateNewUser,
   handleUpdateAUser,
   handleDeleteAUser,
+  getAllCode,
 };

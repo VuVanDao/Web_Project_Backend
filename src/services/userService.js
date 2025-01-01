@@ -240,10 +240,42 @@ let handleDeleteAUser = async (userId) => {
     }
   });
 };
+let getAllCodeService = async (type) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!type) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        let data = {};
+        let result = await db.AllCode.findAll({
+          raw: true,
+          where: { type: type },
+        });
+        console.log("result", result);
+
+        if (result) {
+          data.errCode = 0;
+          data.errMessage = "Get all code success";
+          data.data = result;
+        } else {
+          data.errCode = 1;
+          data.errMessage = "Get all code failed";
+        }
+        resolve(data);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
   handleCreateNewUser,
   handleUpdateAUser,
   handleDeleteAUser,
+  getAllCodeService,
 };

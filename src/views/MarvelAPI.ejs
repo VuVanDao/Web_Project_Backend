@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h4>Id:<%=data[0].id%></h4>
+      <hr />
+      <h4>Name:<%=data[0].name%></h4>
+      <hr />
+      <h4>Description:<%=data[0].description%></h4>
+      <hr />
+      <h4>ResourceURI:<%=data[0].resourceURI%></h4>
+      <hr />
+      <%for(let i = 0;i < data[0].comics.items.length>0;i++){%>
+      <h4>Comics:<%=JSON.stringify(data[0].comics.items[i])%></h4>
+      <%}%>
+      <hr />
+      <h4>Comics.collectionURI:<%=data[0].comics.collectionURI%></h4>
+      <hr />
+      <%for(let i = 0;i < data[0].series.items.length>0;i++){%>
+      <h4>series:<%=JSON.stringify(data[0].series.items[i])%></h4>
+      <%}%>
+      <hr />
+      <h4>series.collectionURI:<%=data[0].series.collectionURI%></h4>
+      <hr />
+      <h4>stories:<%=JSON.stringify(data[0].stories.items)%></h4>
+      <hr />
+      <h4>stories.collectionURI:<%=data[0].stories.collectionURI%></h4>
+      <hr />
+      <h4>events:<%= JSON.stringify(data[0].events.items)%></h4>
+      <hr />
+      <h4>events.collectionURI:<%=data[0].events.collectionURI%></h4>
+      <hr />
+      <h4>urls.collectionURI:<%= JSON.stringify(data[0].urls)%></h4>
+      <hr />
+      <hr />
+    </div>
+  </body>
+</html>
