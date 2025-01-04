@@ -255,7 +255,6 @@ let getAllCodeService = async (type) => {
           where: { type: type },
         });
         console.log("result", result);
-
         if (result) {
           data.errCode = 0;
           data.errMessage = "Get all code success";
