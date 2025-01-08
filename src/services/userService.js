@@ -155,7 +155,8 @@ let handleCreateNewUser = async (data) => {
           phoneNumber: data.phoneNumber,
           gender: data.gender,
           roleId: data.roleId,
-          positionId: data.position,
+          positionId: data.positionId,
+          image: data.image,
         });
         if (!user) {
           resolve({
@@ -202,7 +203,11 @@ let handleUpdateAUser = async (data) => {
         user.address = data.address;
         user.phoneNumber = data.phoneNumber;
         user.gender = data.gender;
+        user.positionId = data.positionId;
         user.roleId = data.roleId;
+        if (data.image) {
+          user.image = data.image;
+        }
         await user.save();
         resolve({
           errCode: 0,
@@ -271,6 +276,46 @@ let getAllCodeService = async (type) => {
     }
   });
 };
+let getDoctor = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = {};
+      let data = await db.User.findAll({
+        where: {
+          roleId: "R2",
+        },
+        limit: 10,
+        raw: true,
+        nest: true,
+        attributes: {
+          exclude: ["password"],
+        },
+        order: [["createdAt", "ASC"]],
+        include: [
+          {
+            model: db.AllCode,
+            as: "positionData",
+            attributes: ["valueEn", "valueVi"],
+          },
+          {
+            model: db.AllCode,
+            as: "genderData",
+            attributes: ["valueEn", "valueVi"],
+          },
+        ],
+      });
+
+      if (data && data.length > 0) {
+        result.errCode = 0;
+        result.errMessage = "Ok";
+        result.listDoctor = data;
+      }
+      resolve(result);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -278,4 +323,5 @@ module.exports = {
   handleUpdateAUser,
   handleDeleteAUser,
   getAllCodeService,
+  getDoctor,
 };

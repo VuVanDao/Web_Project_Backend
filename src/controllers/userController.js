@@ -86,6 +86,18 @@ let getAllCode = async (req, res) => {
     return res.status(200).json(data);
   }
 };
+let getDoctor = async (req, res) => {
+  try {
+    let data = await userService.getDoctor();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log("Error at userController: " + error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "error",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -93,4 +105,5 @@ module.exports = {
   handleUpdateAUser,
   handleDeleteAUser,
   getAllCode,
+  getDoctor,
 };
