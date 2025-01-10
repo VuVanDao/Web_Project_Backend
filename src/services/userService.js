@@ -316,6 +316,121 @@ let getDoctor = async () => {
     }
   });
 };
+let getAllDoctor = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = {};
+      let data = await db.User.findAll({
+        where: {
+          roleId: "R2",
+        },
+        raw: true,
+        nest: true,
+        attributes: {
+          exclude: ["password", "image", "createdAt", "updatedAt"],
+        },
+        order: [["id", "ASC"]],
+        include: [
+          {
+            model: db.AllCode,
+            as: "positionData",
+            attributes: ["valueEn", "valueVi"],
+          },
+          {
+            model: db.AllCode,
+            as: "genderData",
+            attributes: ["valueEn", "valueVi"],
+          },
+        ],
+      });
+
+      if (data && data.length > 0) {
+        result.errCode = 0;
+        result.errMessage = "Ok";
+        result.listDoctor = data;
+      }
+      resolve(result);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let saveInfoDoctor = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.id) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing id",
+        });
+      } else {
+        let markdown = await db.Markdown.create({
+          doctorId: data.id,
+          contentHTML: data.htmlMarkdown,
+          contentMarkdown: data.textMarkdown,
+          description: data.introduce,
+        });
+        if (markdown) {
+          resolve({
+            errCode: 0,
+            errMessage: "nice",
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let getDetailDoctor = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing id",
+        });
+      } else {
+        let data = await db.User.findOne({
+          where: {
+            id: id,
+          },
+          raw: true,
+          nest: true,
+          attributes: {
+            exclude: ["password", "image", "createdAt", "updatedAt"],
+          },
+          include: [
+            {
+              model: db.Markdown,
+              attributes: ["contentHTML", "contentMarkdown", "description"],
+            },
+            {
+              model: db.AllCode,
+              as: "positionData",
+              attributes: ["valueVi", "valueEn"],
+            },
+          ],
+        });
+        if (!data) {
+          resolve({
+            errCode: 2,
+            errMessage: "Not found user",
+            data: {},
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "Found a user",
+            data,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -324,4 +439,7 @@ module.exports = {
   handleDeleteAUser,
   getAllCodeService,
   getDoctor,
+  getAllDoctor,
+  saveInfoDoctor,
+  getDetailDoctor,
 };

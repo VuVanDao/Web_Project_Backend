@@ -1,5 +1,6 @@
 import e from "express";
 import userService from "../services/userService";
+import { json } from "body-parser";
 let handleLogin = async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
@@ -98,6 +99,43 @@ let getDoctor = async (req, res) => {
     });
   }
 };
+let getAllDoctor = async (req, res) => {
+  try {
+    let data = await userService.getAllDoctor();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log("Error at userController: " + error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "error",
+    });
+  }
+};
+let saveInfoDoctor = async (req, res) => {
+  try {
+    let data = await userService.saveInfoDoctor(req.body);
+    console.log(">>", data);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log("Error at userController: " + error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "error",
+    });
+  }
+};
+let getDetailDoctor = async (req, res) => {
+  try {
+    let data = await userService.getDetailDoctor(req.query.id);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -106,4 +144,7 @@ module.exports = {
   handleDeleteAUser,
   getAllCode,
   getDoctor,
+  getAllDoctor,
+  saveInfoDoctor,
+  getDetailDoctor,
 };
