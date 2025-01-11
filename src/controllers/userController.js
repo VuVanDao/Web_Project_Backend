@@ -114,7 +114,6 @@ let getAllDoctor = async (req, res) => {
 let saveInfoDoctor = async (req, res) => {
   try {
     let data = await userService.saveInfoDoctor(req.body);
-    console.log(">>", data);
     return res.status(200).json(data);
   } catch (error) {
     console.log("Error at userController: " + error);

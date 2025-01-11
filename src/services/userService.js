@@ -364,13 +364,36 @@ let saveInfoDoctor = async (data) => {
           errMessage: "Missing id",
         });
       } else {
-        let markdown = await db.Markdown.create({
-          doctorId: data.id,
-          contentHTML: data.htmlMarkdown,
-          contentMarkdown: data.textMarkdown,
-          description: data.introduce,
+        let result = await db.Markdown.findOne({
+          where: {
+            doctorId: data.id,
+          },
         });
-        if (markdown) {
+        if (!result) {
+          let markdown = await db.Markdown.create({
+            doctorId: data.id,
+            contentHTML: data.htmlMarkdown,
+            contentMarkdown: data.textMarkdown,
+            description: data.introduce,
+          });
+          if (markdown) {
+            resolve({
+              errCode: 0,
+              errMessage: "nice",
+            });
+          } else {
+            resolve({
+              errCode: -1,
+              errMessage: "something wrong",
+              data: [],
+            });
+          }
+        } else {
+          result.doctorId = data.id;
+          result.contentHTML = data.htmlMarkdown;
+          result.contentMarkdown = data.textMarkdown;
+          result.description = data.introduce;
+          await result.save();
           resolve({
             errCode: 0,
             errMessage: "nice",
@@ -398,7 +421,7 @@ let getDetailDoctor = async (id) => {
           raw: true,
           nest: true,
           attributes: {
-            exclude: ["password", "image", "createdAt", "updatedAt"],
+            exclude: ["password", "createdAt", "updatedAt"],
           },
           include: [
             {
@@ -419,6 +442,9 @@ let getDetailDoctor = async (id) => {
             data: {},
           });
         } else {
+          if (data.image) {
+            data.image = new Buffer(data.image, "base64").toString("binary");
+          }
           resolve({
             errCode: 0,
             errMessage: "Found a user",
