@@ -3,8 +3,11 @@ import axios from "axios";
 import bcrypt from "bcryptjs";
 import { raw } from "body-parser";
 import { where } from "sequelize";
+require("dotenv").config();
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 let saltRounds = 10;
 let salt = bcrypt.genSaltSync(saltRounds);
+import _ from "lodash";
 let handleUserLogin = async (email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -259,6 +262,9 @@ let getAllCodeService = async (type) => {
         let result = await db.AllCode.findAll({
           raw: true,
           where: { type: type },
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
         });
         // console.log("result", result);
         if (result) {
@@ -457,6 +463,85 @@ let getDetailDoctor = async (id) => {
     }
   });
 };
+let saveSchedule = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data && !data.schedule) {
+        resolve({
+          errCode: -1,
+          errMessage: "Missing data",
+        });
+      } else {
+        let schedule = data.arrSchedule;
+        if (schedule && schedule.length > 0) {
+          schedule = schedule.map((item) => {
+            item.maxNumber = +MAX_NUMBER_SCHEDULE;
+            return item;
+          });
+        }
+        let res = await db.Schedule.findAll({
+          where: {
+            doctorId: schedule[0].doctorId,
+          },
+          raw: true,
+          nest: true,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "id", "currentNumber"],
+          },
+        });
+        if (res.length === 0) {
+          await db.Schedule.bulkCreate(schedule);
+        } else {
+          //compare
+          Array.prototype.equals = function (array) {
+            if (!Array.isArray(array)) {
+              throw new Error("Tham số truyền vào phải là một mảng.");
+            }
+            const differences = {
+              toAdd: [],
+              toRemove: [],
+            };
+            differences.toAdd = array.filter(
+              (item2) =>
+                !this.some(
+                  (item1) => JSON.stringify(item1) === JSON.stringify(item2)
+                )
+            );
+            differences.toRemove = this.filter(
+              (item1) =>
+                !array.some(
+                  (item2) => JSON.stringify(item1) === JSON.stringify(item2)
+                )
+            );
+            return differences;
+          };
+          let check = res.equals(data.arrSchedule);
+          await db.Schedule.bulkCreate(check.toAdd);
+          if (check.toRemove.length > 0) {
+            check.toRemove.map(async (item) => {
+              await db.Schedule.destroy({
+                where: {
+                  doctorId: item.doctorId,
+                  date: item.date,
+                  timeType: item.timeType,
+                },
+              });
+            });
+          }
+
+          // await db.Schedule.destroy(check.toRemove);
+        }
+
+        resolve({
+          errCode: 0,
+          errMessage: "Done",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -468,4 +553,5 @@ module.exports = {
   getAllDoctor,
   saveInfoDoctor,
   getDetailDoctor,
+  saveSchedule,
 };

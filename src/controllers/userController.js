@@ -135,6 +135,18 @@ let getDetailDoctor = async (req, res) => {
     });
   }
 };
+let saveSchedule = async (req, res) => {
+  try {
+    let data = await userService.saveSchedule(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -146,4 +158,5 @@ module.exports = {
   getAllDoctor,
   saveInfoDoctor,
   getDetailDoctor,
+  saveSchedule,
 };
