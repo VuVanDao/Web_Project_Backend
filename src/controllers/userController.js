@@ -147,6 +147,21 @@ let saveSchedule = async (req, res) => {
     });
   }
 };
+let getAllScheduleByDay = async (req, res) => {
+  try {
+    let data = await userService.getAllScheduleByDay(
+      req.query.doctorId,
+      req.query.date
+    );
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -159,4 +174,5 @@ module.exports = {
   saveInfoDoctor,
   getDetailDoctor,
   saveSchedule,
+  getAllScheduleByDay,
 };

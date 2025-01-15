@@ -31,6 +31,10 @@ let initWebRoutes = (app) => {
   router.post("/api/save-info-doctor", userController.saveInfoDoctor);
   router.get("/api/get-detail-doctor", userController.getDetailDoctor);
   router.post("/api/save-schedule", userController.saveSchedule);
+  router.get(
+    "/api/get-all-schedule-by-day",
+    userController.getAllScheduleByDay
+  );
   return app.use("/", router);
 };
 module.exports = initWebRoutes;

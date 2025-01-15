@@ -482,6 +482,7 @@ let saveSchedule = async (data) => {
         let res = await db.Schedule.findAll({
           where: {
             doctorId: schedule[0].doctorId,
+            date: schedule[0].date,
           },
           raw: true,
           nest: true,
@@ -542,6 +543,52 @@ let saveSchedule = async (data) => {
     }
   });
 };
+let getAllScheduleByDay = async (doctorId, date) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!doctorId || !date) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing data required",
+        });
+      } else {
+        let data = await db.Schedule.findAll({
+          where: {
+            doctorId: doctorId,
+            date: date,
+          },
+          raw: true,
+          nest: true,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "currentNumber"],
+          },
+          include: [
+            {
+              model: db.AllCode,
+              as: "timeTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+          ],
+        });
+        if (!data) {
+          resolve({
+            errCode: 1,
+            errMessage: "not found anything",
+            data: [],
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "done",
+            data,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -554,4 +601,5 @@ module.exports = {
   saveInfoDoctor,
   getDetailDoctor,
   saveSchedule,
+  getAllScheduleByDay,
 };
