@@ -375,6 +375,13 @@ let saveInfoDoctor = async (data) => {
             doctorId: data.id,
           },
         });
+        let dataDoctorInfo = await db.Doctor_info.findOne({
+          where: {
+            doctorId: data.id,
+          },
+        });
+        let checkMarkdown = true;
+        let checkDoctorInfo = true;
         if (!result) {
           let markdown = await db.Markdown.create({
             doctorId: data.id,
@@ -383,16 +390,9 @@ let saveInfoDoctor = async (data) => {
             description: data.introduce,
           });
           if (markdown) {
-            resolve({
-              errCode: 0,
-              errMessage: "nice",
-            });
+            checkMarkdown = true;
           } else {
-            resolve({
-              errCode: -1,
-              errMessage: "something wrong",
-              data: [],
-            });
+            checkMarkdown = false;
           }
         } else {
           result.doctorId = data.id;
@@ -400,9 +400,42 @@ let saveInfoDoctor = async (data) => {
           result.contentMarkdown = data.textMarkdown;
           result.description = data.introduce;
           await result.save();
+        }
+        if (!dataDoctorInfo) {
+          let doctorInfo = await db.Doctor_info.create({
+            doctorId: data.id,
+            priceId: data.priceId,
+            paymentId: data.paymentId,
+            provinceId: data.provinceId,
+            addressClinic: data.addressClinic,
+            nameClinic: data.nameClinic,
+            note: data.note,
+            count: 0,
+          });
+          if (doctorInfo) {
+            checkDoctorInfo = true;
+          } else {
+            checkDoctorInfo = false;
+          }
+        } else {
+          dataDoctorInfo.doctorId = data.id;
+          dataDoctorInfo.priceId = data.priceId;
+          dataDoctorInfo.paymentId = data.paymentId;
+          dataDoctorInfo.provinceId = data.provinceId;
+          dataDoctorInfo.addressClinic = data.addressClinic;
+          dataDoctorInfo.nameClinic = data.nameClinic;
+          dataDoctorInfo.note = data.note;
+          await dataDoctorInfo.save();
+        }
+        if (checkMarkdown && checkDoctorInfo) {
           resolve({
             errCode: 0,
-            errMessage: "nice",
+            errMessage: "Done!!!!!!!!!!!!!",
+          });
+        } else {
+          resolve({
+            errCode: -1,
+            errMessage: "Something wrong",
           });
         }
       }
