@@ -30,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
         User.hasOne(models.Markdown, {
           foreignKey: "doctorId",
         });
+      User.hasOne(models.Doctor_info, {
+        foreignKey: "doctorId",
+      });
     }
   }
   User.init(

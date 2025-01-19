@@ -384,7 +384,7 @@ let saveInfoDoctor = async (data) => {
         let checkDoctorInfo = true;
         if (!result) {
           let markdown = await db.Markdown.create({
-            doctorId: data.id,
+            doctorId: data.id.value,
             contentHTML: data.htmlMarkdown,
             contentMarkdown: data.textMarkdown,
             description: data.introduce,
@@ -403,10 +403,10 @@ let saveInfoDoctor = async (data) => {
         }
         if (!dataDoctorInfo) {
           let doctorInfo = await db.Doctor_info.create({
-            doctorId: data.id,
-            priceId: data.priceId,
-            paymentId: data.paymentId,
-            provinceId: data.provinceId,
+            doctorId: data.id.value,
+            priceId: data.priceId.value,
+            paymentId: data.paymentId.value,
+            provinceId: data.provinceId.value,
             addressClinic: data.addressClinic,
             nameClinic: data.nameClinic,
             note: data.note,
@@ -460,7 +460,7 @@ let getDetailDoctor = async (id) => {
           raw: true,
           nest: true,
           attributes: {
-            exclude: ["password", "createdAt", "updatedAt"],
+            exclude: ["password", "createdAt", "updatedAt", "id"],
           },
           include: [
             {
@@ -471,6 +471,44 @@ let getDetailDoctor = async (id) => {
               model: db.AllCode,
               as: "positionData",
               attributes: ["valueVi", "valueEn"],
+            },
+            {
+              model: db.Doctor_info,
+              attributes: [
+                "priceId",
+                "paymentId",
+                "provinceId",
+                "addressClinic",
+                "nameClinic",
+                "note",
+              ],
+            },
+          ],
+        });
+        let dataDoctor = await db.Doctor_info.findOne({
+          where: {
+            doctorId: id,
+          },
+          raw: true,
+          nest: true,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "id"],
+          },
+          include: [
+            {
+              model: db.AllCode,
+              as: "priceTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.AllCode,
+              as: "provinceTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.AllCode,
+              as: "paymentTypeData",
+              attributes: ["valueEn", "valueVi"],
             },
           ],
         });
@@ -484,6 +522,17 @@ let getDetailDoctor = async (id) => {
           if (data.image) {
             data.image = new Buffer(data.image, "base64").toString("binary");
           }
+          if (
+            dataDoctor &&
+            dataDoctor.priceTypeData &&
+            dataDoctor.provinceTypeData &&
+            dataDoctor.paymentTypeData
+          ) {
+            data.Doctor_detail_price = dataDoctor.priceTypeData;
+            data.Doctor_detail_province = dataDoctor.provinceTypeData;
+            data.Doctor_detail_payment = dataDoctor.paymentTypeData;
+          }
+
           resolve({
             errCode: 0,
             errMessage: "Found a user",
