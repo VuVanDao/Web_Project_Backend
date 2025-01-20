@@ -372,12 +372,12 @@ let saveInfoDoctor = async (data) => {
       } else {
         let result = await db.Markdown.findOne({
           where: {
-            doctorId: data.id,
+            doctorId: data.id.value,
           },
         });
         let dataDoctorInfo = await db.Doctor_info.findOne({
           where: {
-            doctorId: data.id,
+            doctorId: data.id.value,
           },
         });
         let checkMarkdown = true;
@@ -395,7 +395,7 @@ let saveInfoDoctor = async (data) => {
             checkMarkdown = false;
           }
         } else {
-          result.doctorId = data.id;
+          result.doctorId = data.id.value;
           result.contentHTML = data.htmlMarkdown;
           result.contentMarkdown = data.textMarkdown;
           result.description = data.introduce;
@@ -418,10 +418,10 @@ let saveInfoDoctor = async (data) => {
             checkDoctorInfo = false;
           }
         } else {
-          dataDoctorInfo.doctorId = data.id;
-          dataDoctorInfo.priceId = data.priceId;
-          dataDoctorInfo.paymentId = data.paymentId;
-          dataDoctorInfo.provinceId = data.provinceId;
+          dataDoctorInfo.doctorId = data.id.value;
+          dataDoctorInfo.priceId = data.priceId.value;
+          dataDoctorInfo.paymentId = data.paymentId.value;
+          dataDoctorInfo.provinceId = data.provinceId.value;
           dataDoctorInfo.addressClinic = data.addressClinic;
           dataDoctorInfo.nameClinic = data.nameClinic;
           dataDoctorInfo.note = data.note;
