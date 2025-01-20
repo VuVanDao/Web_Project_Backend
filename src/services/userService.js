@@ -460,7 +460,7 @@ let getDetailDoctor = async (id) => {
           raw: true,
           nest: true,
           attributes: {
-            exclude: ["password", "createdAt", "updatedAt", "id"],
+            exclude: ["password", "createdAt", "updatedAt"],
           },
           include: [
             {
