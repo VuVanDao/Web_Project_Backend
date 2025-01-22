@@ -2,6 +2,7 @@ import express from "express";
 let router = express.Router();
 import homeController from "../controllers/homeController";
 import userController from "../controllers/userController";
+import bookingController from "../controllers/bookingController";
 let initWebRoutes = (app) => {
   router.get("/", homeController.getHomePage);
   router.get("/about", homeController.getAboutPage);
@@ -35,6 +36,7 @@ let initWebRoutes = (app) => {
     "/api/get-all-schedule-by-day",
     userController.getAllScheduleByDay
   );
+  router.post("/api/patient-booking", bookingController.PatientBooking);
   return app.use("/", router);
 };
 module.exports = initWebRoutes;
