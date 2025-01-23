@@ -1,8 +1,4 @@
 import db from "../models/index";
-import axios from "axios";
-import bcrypt from "bcryptjs";
-import { raw } from "body-parser";
-import { where } from "sequelize";
 require("dotenv").config();
 
 let PatientBooking = (data) => {
@@ -19,6 +15,7 @@ let PatientBooking = (data) => {
           defaults: {
             email: data.email,
             roleId: "R3",
+            gender: data.gender,
           },
         });
         if (user && user[0]) {
@@ -40,7 +37,8 @@ let PatientBooking = (data) => {
         }
         resolve({
           errMassage: "success",
-          data: user,
+          data: user[0],
+          errCode: 0,
         });
       }
     } catch (error) {
