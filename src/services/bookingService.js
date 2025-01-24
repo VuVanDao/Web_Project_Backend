@@ -1,4 +1,5 @@
 import db from "../models/index";
+import emailService from "./emailService";
 require("dotenv").config();
 
 let PatientBooking = (data) => {
@@ -10,6 +11,21 @@ let PatientBooking = (data) => {
           errMassage: "Missing email",
         });
       } else {
+        await emailService.sendEmail({
+          email: data.email,
+          name: "VuVanDao",
+          doctorName: "NguyenVanA",
+          time: "8h-9h",
+          day:
+            new Date().getDate() +
+            "/" +
+            new Date().getMonth() +
+            1 +
+            "/" +
+            new Date().getFullYear(),
+          address: "Nam Dinh",
+          price: "100,000VNĐ",
+        });
         let user = await db.User.findOrCreate({
           where: { email: data.email },
           defaults: {

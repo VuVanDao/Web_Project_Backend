@@ -8,8 +8,11 @@ import connectDB from "./config/connectDB";
 import db from "./models";
 import cron from "node-cron";
 import { where } from "sequelize";
-cron.schedule("*/1000 * * * * *", async () => {
-  console.log("running a task every 10 second");
+cron.schedule("*/10000 * * * * *", async () => {
+  console.log(
+    "running a task every 10 second",
+    new Date(new Date().getTime() - 24 * 60 * 60 * 1000).getTime()
+  );
   await db.Schedule.destroy({
     where: {
       date: {
