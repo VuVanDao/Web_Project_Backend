@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import db from "../models/index";
 import emailService from "./emailService";
 require("dotenv").config();
@@ -5,26 +6,58 @@ require("dotenv").config();
 let PatientBooking = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.email || !data.doctorId) {
+      if (
+        !data.email ||
+        !data.doctorId ||
+        !data.date ||
+        !data.timeType ||
+        !data.userName
+      ) {
         resolve({
           errCode: 1,
           errMassage: "Missing email",
         });
       } else {
+        let dataDoctor = await db.Doctor_info.findOne({
+          where: {
+            doctorId: data.doctorId,
+          },
+          raw: true,
+          nest: true,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "id", "doctorId"],
+          },
+          include: [
+            {
+              model: db.AllCode,
+              as: "priceTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.AllCode,
+              as: "provinceTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.AllCode,
+              as: "paymentTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+          ],
+        });
+
         await emailService.sendEmail({
           email: data.email,
-          name: "VuVanDao",
-          doctorName: "NguyenVanA",
-          time: "8h-9h",
-          day:
-            new Date().getDate() +
-            "/" +
-            new Date().getMonth() +
-            1 +
-            "/" +
-            new Date().getFullYear(),
-          address: "Nam Dinh",
-          price: "100,000VNĐ",
+          name: data.userName,
+          doctorName: data.doctorName,
+          time: data.timeType,
+          day: data.date,
+          address: data.address,
+          price:
+            data.language === "vi"
+              ? dataDoctor.priceTypeData.valueVi + " VND"
+              : dataDoctor.priceTypeData.valueEn + " USD",
+          language: data.language,
         });
         let user = await db.User.findOrCreate({
           where: { email: data.email },
@@ -39,15 +72,15 @@ let PatientBooking = (data) => {
             where: {
               doctorId: data.doctorId,
               patientId: user[0].id,
-              date: data.date,
-              timeType: data.timeType,
+              date: data.cloneState.date,
+              timeType: data.cloneState.timeType,
             },
             defaults: {
               statusId: "S1",
               doctorId: data.doctorId,
               patientId: user[0].id,
-              date: data.date,
-              timeType: data.timeType,
+              date: data.cloneState.date,
+              timeType: data.cloneState.timeType,
             },
           });
         }

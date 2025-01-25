@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       // The A.hasMany(B) association means that a One-To-Many relationship exists between A and B,
       // with the foreign key being defined in the target model (B).
 
+      //       To create a One-To-One relationship, the hasOne and belongsTo associations are used together;
+      // To create a One-To-Many relationship, the hasMany and belongsTo associations are used together;
+      // To create a Many-To-Many relationship, two belongsToMany calls are used together
       User.belongsTo(models.AllCode, {
         foreignKey: "positionId",
         targetKey: "keyMap",
@@ -32,6 +35,11 @@ module.exports = (sequelize, DataTypes) => {
         });
       User.hasOne(models.Doctor_info, {
         foreignKey: "doctorId",
+      });
+      User.hasMany(models.Schedule, {
+        foreignKey: "doctorId",
+        targetKey: "keyMap",
+        as: "doctorIdData",
       });
     }
   }

@@ -650,6 +650,11 @@ let getAllScheduleByDay = async (doctorId, date) => {
               as: "timeTypeData",
               attributes: ["valueEn", "valueVi"],
             },
+            {
+              model: db.User,
+              as: "doctorIdData",
+              attributes: ["firstName", "lastName"],
+            },
           ],
         });
         if (!data) {
