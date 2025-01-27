@@ -37,6 +37,7 @@ let initWebRoutes = (app) => {
     userController.getAllScheduleByDay
   );
   router.post("/api/patient-booking", bookingController.PatientBooking);
+  router.post("/api/verify-booking", bookingController.VerifyBooking);
   return app.use("/", router);
 };
 module.exports = initWebRoutes;

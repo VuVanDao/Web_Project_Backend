@@ -1,8 +1,15 @@
 import { where } from "sequelize";
 import db from "../models/index";
 import emailService from "./emailService";
+import { reject } from "lodash";
 require("dotenv").config();
+const { v4: uuidv4 } = require("uuid");
+let URL = (doctorId, token) => {
+  let result = "";
 
+  result = `${process.env.URL_REACT}/verify-booking?token=${token}&doctorId=${doctorId}`;
+  return result;
+};
 let PatientBooking = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -45,7 +52,7 @@ let PatientBooking = (data) => {
             },
           ],
         });
-
+        let token = uuidv4();
         await emailService.sendEmail({
           email: data.email,
           name: data.userName,
@@ -58,6 +65,7 @@ let PatientBooking = (data) => {
               ? dataDoctor.priceTypeData.valueVi + " VND"
               : dataDoctor.priceTypeData.valueEn + " USD",
           language: data.language,
+          url: URL(data.doctorId, token),
         });
         let user = await db.User.findOrCreate({
           where: { email: data.email },
@@ -81,6 +89,7 @@ let PatientBooking = (data) => {
               patientId: user[0].id,
               date: data.cloneState.date,
               timeType: data.cloneState.timeType,
+              token: token,
             },
           });
         }
@@ -95,6 +104,44 @@ let PatientBooking = (data) => {
     }
   });
 };
+let VerifyBooking = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.token || !data.doctorId) {
+        resolve({
+          errCode: 1,
+          errMassage: "Missing parameter",
+        });
+      } else {
+        let res = await db.Booking.findOne({
+          where: {
+            doctorId: data.doctorId,
+            token: data.token,
+            statusId: "S1",
+          },
+        });
+        if (res) {
+          res.statusId = "S2";
+          await res.save({});
+          resolve({
+            errCode: 0,
+            errMessage: "Complete",
+          });
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: "Not Complete",
+          });
+        }
+      }
+    } catch (error) {
+      console.log(">>", error);
+
+      reject(error);
+    }
+  });
+};
 module.exports = {
   PatientBooking,
+  VerifyBooking,
 };

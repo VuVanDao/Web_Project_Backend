@@ -25,9 +25,8 @@ let sendEmail = async (data) => {
       <p>Ngày: ${data.day}</p>
       <p>Địa chỉ: ${data.address}</p>  
       <p>Chi phí: ${data.price}</p>
-      <p>Nếu các thông tin trên là chính xác ,hãy xác nhận ở phía dưới,Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi</p>  
-      <a href="#!">Xác nhận</a>
-      `, // html body
+      <p>Nếu các thông tin trên là chính xác ,hãy xác nhận ở phía dưới,Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi</p>  <a href="${data.url}">Xác nhận</a>`,
+      // html body
     });
   } else {
     const info = await transporter.sendMail({
@@ -42,9 +41,8 @@ let sendEmail = async (data) => {
       <p>Date: ${data.day}</p>
       <p>Address: ${data.address}</p>  
       <p>Price: ${data.price}</p>
-      <p>If the above information is correct, please confirm below. Thank you for using our service.</p>  
-      <a href="#!">Confirm</a>
-      `, // html body
+      <p>If the above information is correct, please confirm below. Thank you for using our service.</p>  <a href="${data.url}">Confirm</a>`,
+      // html body
     });
   }
 };
