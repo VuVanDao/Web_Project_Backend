@@ -36,6 +36,7 @@ let initWebRoutes = (app) => {
     "/api/get-all-schedule-by-day",
     userController.getAllScheduleByDay
   );
+  router.post("/api/create-new-specialty", userController.CreateNewSpecialty);
   router.post("/api/patient-booking", bookingController.PatientBooking);
   router.post("/api/verify-booking", bookingController.VerifyBooking);
   return app.use("/", router);

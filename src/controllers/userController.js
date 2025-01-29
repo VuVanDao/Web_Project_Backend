@@ -162,6 +162,18 @@ let getAllScheduleByDay = async (req, res) => {
     });
   }
 };
+let CreateNewSpecialty = async (req, res) => {
+  try {
+    let data = await userService.CreateNewSpecialty(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -175,4 +187,5 @@ module.exports = {
   getDetailDoctor,
   saveSchedule,
   getAllScheduleByDay,
+  CreateNewSpecialty,
 };

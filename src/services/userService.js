@@ -1,7 +1,7 @@
 import db from "../models/index";
 import axios from "axios";
 import bcrypt from "bcryptjs";
-import { raw } from "body-parser";
+import { name, raw } from "body-parser";
 import { where } from "sequelize";
 require("dotenv").config();
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
@@ -676,6 +676,36 @@ let getAllScheduleByDay = async (doctorId, date) => {
     }
   });
 };
+let CreateNewSpecialty = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.name || !data.descriptionHTML || !data.descriptionMarkdown) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing something",
+        });
+      } else {
+        let user = await db.specialty.create({
+          name: data.name,
+          descriptionHTML: data.descriptionHTML,
+          descriptionMarkdown: data.descriptionMarkdown,
+          image: data.image,
+        });
+        if (!user) {
+          resolve({
+            errCode: -1,
+            errMessage: "Create not complete",
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "Complete",
+          });
+        }
+      }
+    } catch (error) {}
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -689,4 +719,5 @@ module.exports = {
   getDetailDoctor,
   saveSchedule,
   getAllScheduleByDay,
+  CreateNewSpecialty,
 };
