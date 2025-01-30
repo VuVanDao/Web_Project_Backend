@@ -174,6 +174,19 @@ let CreateNewSpecialty = async (req, res) => {
     });
   }
 };
+let GetAllSpecialty = async (req, res) => {
+  try {
+    let data = await userService.GetAllSpecialty();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
+
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -188,4 +201,5 @@ module.exports = {
   saveSchedule,
   getAllScheduleByDay,
   CreateNewSpecialty,
+  GetAllSpecialty,
 };
