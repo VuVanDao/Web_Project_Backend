@@ -401,12 +401,15 @@ let saveInfoDoctor = async (data) => {
           result.description = data.introduce;
           await result.save();
         }
+
         if (!dataDoctorInfo) {
           let doctorInfo = await db.Doctor_info.create({
             doctorId: data.id.value,
             priceId: data.priceId.value,
             paymentId: data.paymentId.value,
             provinceId: data.provinceId.value,
+            specialtyId: data.specialtyId.value,
+            clinicId: data.clinicId.value,
             addressClinic: data.addressClinic,
             nameClinic: data.nameClinic,
             note: data.note,
@@ -479,6 +482,8 @@ let getDetailDoctor = async (id) => {
                 "paymentId",
                 "provinceId",
                 "addressClinic",
+                "specialtyId",
+                "clinicId",
                 "nameClinic",
                 "note",
               ],
@@ -510,6 +515,11 @@ let getDetailDoctor = async (id) => {
               as: "paymentTypeData",
               attributes: ["valueEn", "valueVi"],
             },
+            {
+              model: db.specialty,
+              as: "specialtyData",
+              attributes: ["name"],
+            },
           ],
         });
         if (!data) {
@@ -526,11 +536,13 @@ let getDetailDoctor = async (id) => {
             dataDoctor &&
             dataDoctor.priceTypeData &&
             dataDoctor.provinceTypeData &&
-            dataDoctor.paymentTypeData
+            dataDoctor.paymentTypeData &&
+            dataDoctor.specialtyData
           ) {
             data.Doctor_detail_price = dataDoctor.priceTypeData;
             data.Doctor_detail_province = dataDoctor.provinceTypeData;
             data.Doctor_detail_payment = dataDoctor.paymentTypeData;
+            data.Doctor_detail_specialty = dataDoctor.specialtyData;
           }
 
           resolve({
