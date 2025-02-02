@@ -425,6 +425,8 @@ let saveInfoDoctor = async (data) => {
           dataDoctorInfo.priceId = data.priceId.value;
           dataDoctorInfo.paymentId = data.paymentId.value;
           dataDoctorInfo.provinceId = data.provinceId.value;
+          dataDoctorInfo.specialtyId = data.specialtyId.value;
+          dataDoctorInfo.clinicId = data.clinicId.value;
           dataDoctorInfo.addressClinic = data.addressClinic;
           dataDoctorInfo.nameClinic = data.nameClinic;
           dataDoctorInfo.note = data.note;
@@ -749,6 +751,143 @@ let GetAllSpecialty = (data) => {
     }
   });
 };
+let GetAllDoctorBySpecialty = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing parameter",
+        });
+      } else {
+        let data = await db.Doctor_info.findAll({
+          where: {
+            specialtyId: id,
+          },
+          raw: true,
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+        });
+        if (!data || data.length < 0) {
+          resolve({
+            errCode: 1,
+            errMessage: "Not found any doctor",
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "complete",
+            data,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let GetDetailSpecialty = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing parameter",
+        });
+      } else {
+        let data = await db.specialty.findOne({
+          where: {
+            id: id,
+          },
+          raw: true,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "image"],
+          },
+        });
+        if (!data) {
+          resolve({
+            errCode: 1,
+            errMessage: "Not found any specialty",
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "complete",
+            data,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let GetDoctorByProvince = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing parameter",
+        });
+      } else {
+        if (
+          id.provinceId === "all" ||
+          id.provinceId === "ALL" ||
+          id.provinceId === "All"
+        ) {
+          let data = await db.Doctor_info.findAll({
+            where: {
+              specialtyId: id.specialtyId,
+            },
+            raw: true,
+            attributes: {
+              exclude: ["createdAt", "updatedAt"],
+            },
+          });
+          if (!data) {
+            resolve({
+              errCode: 1,
+              errMessage: "Not found any doctor",
+            });
+          } else {
+            resolve({
+              errCode: 0,
+              errMessage: "complete",
+              data,
+            });
+          }
+        } else {
+          let data = await db.Doctor_info.findAll({
+            where: {
+              provinceID: id.provinceId,
+              specialtyId: id.specialtyId,
+            },
+            raw: true,
+            attributes: {
+              exclude: ["createdAt", "updatedAt"],
+            },
+          });
+          if (!data) {
+            resolve({
+              errCode: 1,
+              errMessage: "Not found any doctor",
+            });
+          } else {
+            resolve({
+              errCode: 0,
+              errMessage: "complete",
+              data,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -764,4 +903,7 @@ module.exports = {
   getAllScheduleByDay,
   CreateNewSpecialty,
   GetAllSpecialty,
+  GetAllDoctorBySpecialty,
+  GetDetailSpecialty,
+  GetDoctorByProvince,
 };

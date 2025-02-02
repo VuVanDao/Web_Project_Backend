@@ -186,7 +186,42 @@ let GetAllSpecialty = async (req, res) => {
     });
   }
 };
-
+let GetAllDoctorBySpecialty = async (req, res) => {
+  try {
+    let data = await userService.GetAllDoctorBySpecialty(req.query.id);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
+let GetDetailSpecialty = async (req, res) => {
+  try {
+    let data = await userService.GetDetailSpecialty(req.query.id);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
+let GetDoctorByProvince = async (req, res) => {
+  try {
+    let data = await userService.GetDoctorByProvince(req.query);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -202,4 +237,7 @@ module.exports = {
   getAllScheduleByDay,
   CreateNewSpecialty,
   GetAllSpecialty,
+  GetAllDoctorBySpecialty,
+  GetDetailSpecialty,
+  GetDoctorByProvince,
 };

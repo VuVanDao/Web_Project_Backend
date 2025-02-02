@@ -38,6 +38,12 @@ let initWebRoutes = (app) => {
   );
   router.post("/api/create-new-specialty", userController.CreateNewSpecialty);
   router.get("/api/get-all-specialty", userController.GetAllSpecialty);
+  router.get(
+    "/api/get-all-doctor-by-specialty",
+    userController.GetAllDoctorBySpecialty
+  );
+  router.get("/api/get-doctor-by-province", userController.GetDoctorByProvince);
+  router.get("/api/get-detail-specialty", userController.GetDetailSpecialty);
   router.post("/api/patient-booking", bookingController.PatientBooking);
   router.post("/api/verify-booking", bookingController.VerifyBooking);
   return app.use("/", router);
