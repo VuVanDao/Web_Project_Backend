@@ -222,6 +222,42 @@ let GetDoctorByProvince = async (req, res) => {
     });
   }
 };
+let CreateNewClinic = async (req, res) => {
+  try {
+    let data = await userService.CreateNewClinic(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
+let GetAllClinic = async (req, res) => {
+  try {
+    let data = await userService.GetAllClinic();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
+let GetAllDoctorByClinic = async (req, res) => {
+  try {
+    let data = await userService.GetAllDoctorByClinic(req.query.id);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -240,4 +276,7 @@ module.exports = {
   GetAllDoctorBySpecialty,
   GetDetailSpecialty,
   GetDoctorByProvince,
+  CreateNewClinic,
+  GetAllClinic,
+  GetAllDoctorByClinic,
 };

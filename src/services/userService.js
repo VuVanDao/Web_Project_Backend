@@ -522,6 +522,11 @@ let getDetailDoctor = async (id) => {
               as: "specialtyData",
               attributes: ["name"],
             },
+            {
+              model: db.Clinic,
+              as: "clinicData",
+              attributes: ["name"],
+            },
           ],
         });
         if (!data) {
@@ -539,12 +544,14 @@ let getDetailDoctor = async (id) => {
             dataDoctor.priceTypeData &&
             dataDoctor.provinceTypeData &&
             dataDoctor.paymentTypeData &&
-            dataDoctor.specialtyData
+            dataDoctor.specialtyData &&
+            dataDoctor.clinicData
           ) {
             data.Doctor_detail_price = dataDoctor.priceTypeData;
             data.Doctor_detail_province = dataDoctor.provinceTypeData;
             data.Doctor_detail_payment = dataDoctor.paymentTypeData;
             data.Doctor_detail_specialty = dataDoctor.specialtyData;
+            data.Doctor_detail_clinic = dataDoctor.clinicData;
           }
 
           resolve({
@@ -888,6 +895,103 @@ let GetDoctorByProvince = (id) => {
     }
   });
 };
+let CreateNewClinic = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.name || !data.descriptionHTML || !data.descriptionMarkdown) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing something",
+        });
+      } else {
+        let user = await db.Clinic.create({
+          name: data.name,
+          descriptionHTML: data.descriptionHTML,
+          descriptionMarkdown: data.descriptionMarkdown,
+          image: data.image,
+        });
+        if (!user) {
+          resolve({
+            errCode: -1,
+            errMessage: "Create not complete",
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "Complete",
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let GetAllClinic = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let data = await db.Clinic.findAll({
+        limit: 10,
+        raw: true,
+        nest: true,
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      });
+      if (!data || data.length <= 0) {
+        resolve({
+          errCode: -1,
+          errMessage: "Not found",
+          data: [],
+        });
+      } else {
+        resolve({
+          errCode: 0,
+          errMessage: "Complete",
+          data: data,
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let GetAllDoctorByClinic = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing parameter",
+        });
+      } else {
+        let data = await db.Doctor_info.findAll({
+          where: {
+            clinicId: id,
+          },
+          raw: true,
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+        });
+        if (!data || data.length < 0) {
+          resolve({
+            errCode: 1,
+            errMessage: "Not found any doctor",
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "complete",
+            data,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -906,4 +1010,7 @@ module.exports = {
   GetAllDoctorBySpecialty,
   GetDetailSpecialty,
   GetDoctorByProvince,
+  CreateNewClinic,
+  GetAllClinic,
+  GetAllDoctorByClinic,
 };
