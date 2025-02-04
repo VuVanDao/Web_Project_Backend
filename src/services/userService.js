@@ -992,6 +992,42 @@ let GetAllDoctorByClinic = (id) => {
     }
   });
 };
+let GetDetailClinic = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing parameter",
+        });
+      } else {
+        let data = await db.Clinic.findOne({
+          where: {
+            id: id,
+          },
+          raw: true,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "image"],
+          },
+        });
+        if (!data) {
+          resolve({
+            errCode: 1,
+            errMessage: "Not found any clinic",
+          });
+        } else {
+          resolve({
+            errCode: 0,
+            errMessage: "complete",
+            data,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -1013,4 +1049,5 @@ module.exports = {
   CreateNewClinic,
   GetAllClinic,
   GetAllDoctorByClinic,
+  GetDetailClinic,
 };

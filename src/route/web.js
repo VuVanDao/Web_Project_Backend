@@ -44,12 +44,14 @@ let initWebRoutes = (app) => {
   );
   router.get("/api/get-doctor-by-province", userController.GetDoctorByProvince);
   router.get("/api/get-detail-specialty", userController.GetDetailSpecialty);
+
   router.post("/api/create-new-clinic", userController.CreateNewClinic);
   router.get("/api/get-all-clinic", userController.GetAllClinic);
   router.get(
     "/api/get-all-doctor-by-clinic",
     userController.GetAllDoctorByClinic
   );
+  router.get("/api/get-detail-clinic", userController.GetDetailClinic);
 
   router.post("/api/patient-booking", bookingController.PatientBooking);
   router.post("/api/verify-booking", bookingController.VerifyBooking);

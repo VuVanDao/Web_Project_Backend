@@ -258,6 +258,18 @@ let GetAllDoctorByClinic = async (req, res) => {
     });
   }
 };
+let GetDetailClinic = async (req, res) => {
+  try {
+    let data = await userService.GetDetailClinic(req.query.id);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -279,4 +291,5 @@ module.exports = {
   CreateNewClinic,
   GetAllClinic,
   GetAllDoctorByClinic,
+  GetDetailClinic,
 };
