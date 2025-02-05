@@ -270,6 +270,7 @@ let GetDetailClinic = async (req, res) => {
     });
   }
 };
+
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,

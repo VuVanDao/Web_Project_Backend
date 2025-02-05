@@ -839,54 +839,107 @@ let GetDoctorByProvince = (id) => {
           errMessage: "Missing parameter",
         });
       } else {
-        if (
-          id.provinceId === "all" ||
-          id.provinceId === "ALL" ||
-          id.provinceId === "All"
-        ) {
-          let data = await db.Doctor_info.findAll({
-            where: {
-              specialtyId: id.specialtyId,
-            },
-            raw: true,
-            attributes: {
-              exclude: ["createdAt", "updatedAt"],
-            },
-          });
-          if (!data) {
-            resolve({
-              errCode: 1,
-              errMessage: "Not found any doctor",
+        if (id.actionId === "specialty") {
+          if (
+            id.provinceId === "all" ||
+            id.provinceId === "ALL" ||
+            id.provinceId === "All"
+          ) {
+            let data = await db.Doctor_info.findAll({
+              where: {
+                specialtyId: id.specialtyId,
+              },
+              raw: true,
+              attributes: {
+                exclude: ["createdAt", "updatedAt"],
+              },
             });
+            if (!data) {
+              resolve({
+                errCode: 1,
+                errMessage: "Not found any doctor",
+              });
+            } else {
+              resolve({
+                errCode: 0,
+                errMessage: "complete",
+                data,
+              });
+            }
           } else {
-            resolve({
-              errCode: 0,
-              errMessage: "complete",
-              data,
+            let data = await db.Doctor_info.findAll({
+              where: {
+                provinceID: id.provinceId,
+                specialtyId: id.specialtyId,
+              },
+              raw: true,
+              attributes: {
+                exclude: ["createdAt", "updatedAt"],
+              },
             });
+            if (!data) {
+              resolve({
+                errCode: 1,
+                errMessage: "Not found any doctor",
+              });
+            } else {
+              resolve({
+                errCode: 0,
+                errMessage: "complete",
+                data,
+              });
+            }
           }
-        } else {
-          let data = await db.Doctor_info.findAll({
-            where: {
-              provinceID: id.provinceId,
-              specialtyId: id.specialtyId,
-            },
-            raw: true,
-            attributes: {
-              exclude: ["createdAt", "updatedAt"],
-            },
-          });
-          if (!data) {
-            resolve({
-              errCode: 1,
-              errMessage: "Not found any doctor",
+        } else if (id.actionId === "clinic") {
+          if (
+            id.provinceId === "all" ||
+            id.provinceId === "ALL" ||
+            id.provinceId === "All"
+          ) {
+            let data = await db.Doctor_info.findAll({
+              where: {
+                clinicId: id.specialtyId,
+              },
+              raw: true,
+              attributes: {
+                exclude: ["createdAt", "updatedAt"],
+              },
             });
+            if (!data) {
+              resolve({
+                errCode: 1,
+                errMessage: "Not found any doctor",
+              });
+            } else {
+              resolve({
+                errCode: 0,
+                errMessage: "complete",
+                data,
+              });
+            }
           } else {
-            resolve({
-              errCode: 0,
-              errMessage: "complete",
-              data,
+            let data = await db.Doctor_info.findAll({
+              where: {
+                provinceID: id.provinceId,
+                clinicId: id.specialtyId,
+              },
+              raw: true,
+              attributes: {
+                exclude: ["createdAt", "updatedAt"],
+              },
             });
+            if (!data) {
+              resolve({
+                errCode: 1,
+                errMessage: "Not found any doctor",
+              });
+            } else {
+              resolve({
+                errCode: 0,
+                errMessage: "complete",
+                data,
+              });
+            }
           }
         }
       }
@@ -1028,6 +1081,7 @@ let GetDetailClinic = (id) => {
     }
   });
 };
+
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
