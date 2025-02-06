@@ -25,7 +25,20 @@ let VerifyBooking = async (req, res) => {
     });
   }
 };
+let PatientBooked = async (req, res) => {
+  try {
+    let data = await bookingService.PatientBooked(req.query);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log("><<<", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   PatientBooking,
   VerifyBooking,
+  PatientBooked,
 };

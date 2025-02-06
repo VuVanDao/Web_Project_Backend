@@ -70,6 +70,8 @@ let PatientBooking = (data) => {
         let user = await db.User.findOrCreate({
           where: { email: data.email },
           defaults: {
+            firstName: data.userName,
+            address: data.address,
             email: data.email,
             roleId: "R3",
             gender: data.gender,
@@ -141,7 +143,60 @@ let VerifyBooking = (data) => {
     }
   });
 };
+let PatientBooked = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.date || !data.doctorId) {
+        resolve({
+          errCode: 1,
+          errMassage: "Missing parameter",
+        });
+      } else {
+        let res = await db.Booking.findAll({
+          where: {
+            doctorId: data.doctorId,
+            date: data.date,
+            statusId: "S2",
+          },
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "token"],
+          },
+          include: [
+            {
+              model: db.User,
+              as: "bookingData",
+              attributes: [
+                "firstName",
+                "email",
+                "address",
+                "gender",
+                "phoneNumber",
+              ],
+            },
+          ],
+        });
+        if (res) {
+          resolve({
+            errCode: 0,
+            errMessage: "Complete",
+            data: res,
+          });
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: "Not Complete",
+          });
+        }
+      }
+    } catch (error) {
+      console.log(">>", error);
+
+      reject(error);
+    }
+  });
+};
 module.exports = {
   PatientBooking,
   VerifyBooking,
+  PatientBooked,
 };

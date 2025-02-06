@@ -53,6 +53,7 @@ let initWebRoutes = (app) => {
   );
   router.get("/api/get-detail-clinic", userController.GetDetailClinic);
 
+  router.get("/api/get-patient-booked", bookingController.PatientBooked);
   router.post("/api/patient-booking", bookingController.PatientBooking);
   router.post("/api/verify-booking", bookingController.VerifyBooking);
   return app.use("/", router);
