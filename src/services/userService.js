@@ -37,7 +37,7 @@ let checkUserEmail = async (email) => {
         where: { email: email },
         raw: true,
         attributes: {
-          exclude: ["password"],
+          exclude: ["password", "createdAt", "updatedAt"],
         },
       });
       if (user) {

@@ -173,6 +173,11 @@ let PatientBooked = (data) => {
                 "phoneNumber",
               ],
             },
+            {
+              model: db.AllCode,
+              as: "timeData",
+              attributes: ["valueEN", "valueVI"],
+            },
           ],
         });
         if (res) {

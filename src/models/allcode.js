@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "paymentId",
         as: "paymentTypeData",
       });
+      AllCode.hasOne(models.Booking, {
+        foreignKey: "timeType",
+        targetKey: "keyMap",
+        as: "timeData",
+      });
     }
   }
   AllCode.init(
