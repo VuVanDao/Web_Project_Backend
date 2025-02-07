@@ -696,6 +696,66 @@ var SendRemedy = /*#__PURE__*/function () {
     return _ref22.apply(this, arguments);
   };
 }();
+var CreateNewHandBook = /*#__PURE__*/function () {
+  var _ref23 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee23(req, res) {
+    var _data18;
+    return _regeneratorRuntime().wrap(function _callee23$(_context23) {
+      while (1) switch (_context23.prev = _context23.next) {
+        case 0:
+          _context23.prev = 0;
+          _context23.next = 3;
+          return _userService["default"].CreateNewHandBook(req.body);
+        case 3:
+          _data18 = _context23.sent;
+          return _context23.abrupt("return", res.status(200).json(_data18));
+        case 7:
+          _context23.prev = 7;
+          _context23.t0 = _context23["catch"](0);
+          console.log(">", _context23.t0);
+          return _context23.abrupt("return", res.status(200).json({
+            errCode: 1,
+            errMessage: "Something wrong"
+          }));
+        case 11:
+        case "end":
+          return _context23.stop();
+      }
+    }, _callee23, null, [[0, 7]]);
+  }));
+  return function CreateNewHandBook(_x45, _x46) {
+    return _ref23.apply(this, arguments);
+  };
+}();
+var GetAllHandBook = /*#__PURE__*/function () {
+  var _ref24 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee24(req, res) {
+    var _data19;
+    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
+      while (1) switch (_context24.prev = _context24.next) {
+        case 0:
+          _context24.prev = 0;
+          _context24.next = 3;
+          return _userService["default"].GetAllHandBook();
+        case 3:
+          _data19 = _context24.sent;
+          return _context24.abrupt("return", res.status(200).json(_data19));
+        case 7:
+          _context24.prev = 7;
+          _context24.t0 = _context24["catch"](0);
+          console.log(">", _context24.t0);
+          return _context24.abrupt("return", res.status(200).json({
+            errCode: 1,
+            errMessage: "Something wrong"
+          }));
+        case 11:
+        case "end":
+          return _context24.stop();
+      }
+    }, _callee24, null, [[0, 7]]);
+  }));
+  return function GetAllHandBook(_x47, _x48) {
+    return _ref24.apply(this, arguments);
+  };
+}();
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -718,5 +778,7 @@ module.exports = {
   GetAllClinic: GetAllClinic,
   GetAllDoctorByClinic: GetAllDoctorByClinic,
   GetDetailClinic: GetDetailClinic,
-  SendRemedy: SendRemedy
+  SendRemedy: SendRemedy,
+  CreateNewHandBook: CreateNewHandBook,
+  GetAllHandBook: GetAllHandBook
 };

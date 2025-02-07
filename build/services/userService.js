@@ -1946,6 +1946,112 @@ var SendRemedy = function SendRemedy(data) {
     };
   }());
 };
+var CreateNewHandBook = function CreateNewHandBook(data) {
+  return new Promise(/*#__PURE__*/function () {
+    var _ref41 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee41(resolve, reject) {
+      var user;
+      return _regeneratorRuntime().wrap(function _callee41$(_context41) {
+        while (1) switch (_context41.prev = _context41.next) {
+          case 0:
+            _context41.prev = 0;
+            if (!(!data.name || !data.descriptionHTML || !data.descriptionMarkdown)) {
+              _context41.next = 5;
+              break;
+            }
+            resolve({
+              errCode: 1,
+              errMessage: "Missing something"
+            });
+            _context41.next = 9;
+            break;
+          case 5:
+            _context41.next = 7;
+            return _index["default"].HandBook.create({
+              name: data.name,
+              descriptionHTML: data.descriptionHTML,
+              descriptionMarkdown: data.descriptionMarkdown,
+              image: data.image
+            });
+          case 7:
+            user = _context41.sent;
+            if (!user) {
+              resolve({
+                errCode: -1,
+                errMessage: "Create not complete"
+              });
+            } else {
+              resolve({
+                errCode: 0,
+                errMessage: "Complete"
+              });
+            }
+          case 9:
+            _context41.next = 14;
+            break;
+          case 11:
+            _context41.prev = 11;
+            _context41.t0 = _context41["catch"](0);
+            reject(_context41.t0);
+          case 14:
+          case "end":
+            return _context41.stop();
+        }
+      }, _callee41, null, [[0, 11]]);
+    }));
+    return function (_x67, _x68) {
+      return _ref41.apply(this, arguments);
+    };
+  }());
+};
+var GetAllHandBook = function GetAllHandBook(data) {
+  return new Promise(/*#__PURE__*/function () {
+    var _ref42 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee42(resolve, reject) {
+      var _data7;
+      return _regeneratorRuntime().wrap(function _callee42$(_context42) {
+        while (1) switch (_context42.prev = _context42.next) {
+          case 0:
+            _context42.prev = 0;
+            _context42.next = 3;
+            return _index["default"].HandBook.findAll({
+              limit: 10,
+              raw: true,
+              nest: true,
+              attributes: {
+                exclude: ["createdAt", "updatedAt"]
+              }
+            });
+          case 3:
+            _data7 = _context42.sent;
+            if (!_data7 || _data7.length <= 0) {
+              resolve({
+                errCode: -1,
+                errMessage: "Not found",
+                data: []
+              });
+            } else {
+              resolve({
+                errCode: 0,
+                errMessage: "Complete",
+                data: _data7
+              });
+            }
+            _context42.next = 10;
+            break;
+          case 7:
+            _context42.prev = 7;
+            _context42.t0 = _context42["catch"](0);
+            reject(_context42.t0);
+          case 10:
+          case "end":
+            return _context42.stop();
+        }
+      }, _callee42, null, [[0, 7]]);
+    }));
+    return function (_x69, _x70) {
+      return _ref42.apply(this, arguments);
+    };
+  }());
+};
 module.exports = {
   handleUserLogin: handleUserLogin,
   handleGetAllUser: handleGetAllUser,
@@ -1968,5 +2074,7 @@ module.exports = {
   GetAllClinic: GetAllClinic,
   GetAllDoctorByClinic: GetAllDoctorByClinic,
   GetDetailClinic: GetDetailClinic,
-  SendRemedy: SendRemedy
+  SendRemedy: SendRemedy,
+  CreateNewHandBook: CreateNewHandBook,
+  GetAllHandBook: GetAllHandBook
 };

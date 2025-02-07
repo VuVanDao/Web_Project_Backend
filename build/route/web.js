@@ -41,6 +41,9 @@ var initWebRoutes = function initWebRoutes(app) {
   router.get("/api/get-all-clinic", _userController["default"].GetAllClinic);
   router.get("/api/get-all-doctor-by-clinic", _userController["default"].GetAllDoctorByClinic);
   router.get("/api/get-detail-clinic", _userController["default"].GetDetailClinic);
+  //handBook
+  router.post("/api/create-new-handBook", _userController["default"].CreateNewHandBook);
+  router.get("/api/get-all-handBook", _userController["default"].GetAllHandBook);
   router.post("/api/send-remedy", _userController["default"].SendRemedy);
   router.get("/api/get-patient-booked", _bookingController["default"].PatientBooked);
   router.post("/api/patient-booking", _bookingController["default"].PatientBooking);
