@@ -282,7 +282,30 @@ let SendRemedy = async (req, res) => {
     });
   }
 };
-
+let CreateNewHandBook = async (req, res) => {
+  try {
+    let data = await userService.CreateNewHandBook(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
+let GetAllHandBook = async (req, res) => {
+  try {
+    let data = await userService.GetAllHandBook();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUser: handleGetAllUser,
@@ -306,4 +329,6 @@ module.exports = {
   GetAllDoctorByClinic,
   GetDetailClinic,
   SendRemedy,
+  CreateNewHandBook,
+  GetAllHandBook,
 };
