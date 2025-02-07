@@ -270,6 +270,18 @@ let GetDetailClinic = async (req, res) => {
     });
   }
 };
+let SendRemedy = async (req, res) => {
+  try {
+    let data = await userService.SendRemedy(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(">", error);
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Something wrong",
+    });
+  }
+};
 
 module.exports = {
   handleLogin: handleLogin,
@@ -293,4 +305,5 @@ module.exports = {
   GetAllClinic,
   GetAllDoctorByClinic,
   GetDetailClinic,
+  SendRemedy,
 };

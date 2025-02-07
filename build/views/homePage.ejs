@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HomePage</title>
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    />
+
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/homePage.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Navbar</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/"
+              >Home <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/crud">Create</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Dropdown
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/get-crud">Display</a>
+              <a class="dropdown-item" href="/marvel">Marvel'Character</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/yugioh">Something else here</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+        </ul>
+        <form
+          class="form-inline my-2 my-lg-0"
+          action="/yugioh-search"
+          method="get"
+        >
+          <input
+            class="form-control mr-sm-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            name="id"
+          />
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+            Search
+          </button>
+        </form>
+      </div>
+    </nav>
+    <h1 id="title">Tiêu biểu</h1>
+    <a href="#title" class="link">Back</a>
+    <div
+      class="container-all"
+      style="
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto;
+        padding: 10px;
+        gap: 30px;
+        margin-bottom: 50px;
+      "
+    >
+      <% for(let i=0;i < data.data.length;i++) {%>
+      <div class="card-container">
+        <div style="height: 50px; max-width: 210px">
+          <div class="info-img">
+            <div>Id:<%= data.data[i].id%></div>
+            <div><%= data.data[i].name%></div>
+            <div><%= data.data[i].type%></div>
+            <div>level: <%= data.data[i].level%></div>
+            <div>ATK: <%= data.data[i].atk%></div>
+            <div>DEF: <%= data.data[i].def%></div>
+            <div>Attribute: <%= data.data[i].attribute%></div>
+            <div>Archetype: <%= data.data[i].archetype%></div>
+            <div>Desc: <%= data.data[i].desc%></div>
+            <div>
+              <a href="/yugioh-detail?id=<%= data.data[i].id%>">Details</a>
+            </div>
+          </div>
+        </div>
+        <!-- <span><%= data.data[i].type%></span> -->
+        <div>
+          <img
+            src="<%= data.data[i].card_images[0].image_url_small%>"
+            alt=""
+            style="height: 300px"
+          />
+        </div>
+      </div>
+      <%}%>
+    </div>
+  </body>
+</html>

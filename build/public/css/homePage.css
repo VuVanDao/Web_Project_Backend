@@ -1,0 +1,64 @@
+::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+.container-all :nth-child(6n) .info-img {
+  left: -100% !important;
+  top: 100%;
+  width: 250px;
+  display: none;
+  position: relative;
+  background-color: black;
+  color: white;
+  max-height: 300px;
+  transition: 0.5s;
+  padding: 20px;
+  overflow: auto;
+  border-radius: 10px;
+  border: 5px solid gray;
+}
+.card-container img:hover {
+  scale: 1.25;
+  transition: 0.5s;
+  cursor: pointer;
+}
+.info-img {
+  width: 250px;
+  max-height: 300px;
+  display: none;
+  left: 100%;
+  top: 100%;
+  position: relative;
+  background-color: black;
+  color: white;
+  padding: 20px;
+  overflow: auto;
+  border-radius: 10px;
+  border: 5px solid gray;
+}
+.card-container:hover .info-img {
+  display: block;
+  z-index: 10;
+}
+.link {
+  position: fixed;
+  right: 100px;
+  bottom: 50px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: black;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+a.link {
+  text-decoration: none;
+}
+a.link:hover {
+  scale: 1.25;
+  transition: 0.5s;
+  cursor: pointer;
+}

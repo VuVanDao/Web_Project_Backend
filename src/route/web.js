@@ -52,6 +52,7 @@ let initWebRoutes = (app) => {
     userController.GetAllDoctorByClinic
   );
   router.get("/api/get-detail-clinic", userController.GetDetailClinic);
+  router.post("/api/send-remedy", userController.SendRemedy);
 
   router.get("/api/get-patient-booked", bookingController.PatientBooked);
   router.post("/api/patient-booking", bookingController.PatientBooking);

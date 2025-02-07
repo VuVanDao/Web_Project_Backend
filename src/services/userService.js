@@ -3,6 +3,8 @@ import axios from "axios";
 import bcrypt from "bcryptjs";
 import { name, raw } from "body-parser";
 import { where } from "sequelize";
+import emailService from "./emailService";
+
 require("dotenv").config();
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 let saltRounds = 10;
@@ -1081,6 +1083,35 @@ let GetDetailClinic = (id) => {
     }
   });
 };
+let SendRemedy = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing input required",
+        });
+      } else {
+        let res = await db.Booking.findOne({
+          where: {
+            doctorId: data.doctorId,
+            patientId: data.patientId,
+            timeType: data.timeType,
+            statusId: "S2",
+          },
+        });
+        if (res) {
+          res.statusId = "S3";
+          await res.save();
+          await emailService.sendEmailAttach(data);
+          resolve({ errCode: 0, errMessage: "Complete" });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
 module.exports = {
   handleUserLogin: handleUserLogin,
@@ -1104,4 +1135,5 @@ module.exports = {
   GetAllClinic,
   GetAllDoctorByClinic,
   GetDetailClinic,
+  SendRemedy,
 };

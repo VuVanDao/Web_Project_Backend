@@ -46,6 +46,42 @@ let sendEmail = async (data) => {
     });
   }
 };
+let sendEmailAttach = async (data) => {
+  if (data.language === "vi") {
+    const info = await transporter.sendMail({
+      from: '"(☞ﾟヮﾟ)☞ Van Dao👻 ☜(ﾟヮﾟ☜)" <dao28901@gmail.com>', // sender address
+      to: data.email, // list of receivers
+      subject: "Thông tin lịch khám đã đặt tại BookingCare", // Subject line
+      text: `Xin chào ${data.name}`, // plain text body
+      html: `<h1>Xin chào ${data.name} , cảm ơn bạn tin tưởng và đặt lịch khám tại BookingCare</h1>`,
+      attachments: [
+        {
+          filename: "text1.png",
+          content: data.image.split("base64,")[1],
+          encoding: "base64",
+        },
+      ],
+      // html body
+    });
+  } else {
+    const info = await transporter.sendMail({
+      from: '"(☞ﾟヮﾟ)☞ Van Dao👻 ☜(ﾟヮﾟ☜)" <dao28901@gmail.com>', // sender address
+      to: data.email, // list of receivers
+      subject: "Appointment information booked at BookingCare", // Subject line
+      text: `Hello ${data.name}`, // plain text body
+      html: `<h1>Hello ${data.name} , Thank you for your trust and appointment at BookingCare.</h1>`,
+      attachments: [
+        {
+          filename: "text1.png",
+          content: data.image.split("base64,")[1],
+          encoding: "base64",
+        },
+      ],
+      // html body
+    });
+  }
+};
 module.exports = {
   sendEmail,
+  sendEmailAttach,
 };
