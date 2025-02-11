@@ -219,7 +219,6 @@ let getCharacterMarvel = async () => {
         // events: [Object],
         // urls: [Array]
         const characters = response.data.data.results;
-        console.log(">>>", characters);
 
         if (characters && characters.length > 0) {
           resolve(characters);

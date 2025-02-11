@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "keyMap",
         as: "doctorIdData",
       });
-      User.hasMany(models.Booking, {
+      User.hasMany(models.Bookings, {
         foreignKey: "patientId",
         as: "bookingData",
       });

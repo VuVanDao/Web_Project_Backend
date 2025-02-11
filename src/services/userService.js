@@ -177,7 +177,7 @@ let handleCreateNewUser = async (data) => {
             });
           }
         } catch (error) {
-          console.log(">>>", error);
+          console.log("HandleCreateUer-error:", error);
           reject(error);
         }
       } else {
@@ -1098,7 +1098,7 @@ let SendRemedy = (data) => {
           errMessage: "Missing input required",
         });
       } else {
-        let res = await db.Booking.findOne({
+        let res = await db.Bookings.findOne({
           where: {
             doctorId: data.doctorId,
             patientId: data.patientId,

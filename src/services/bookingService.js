@@ -78,7 +78,7 @@ let PatientBooking = (data) => {
           },
         });
         if (user && user[0]) {
-          await db.Booking.findOrCreate({
+          await db.Bookings.findOrCreate({
             where: {
               doctorId: data.doctorId,
               patientId: user[0].id,
@@ -115,7 +115,7 @@ let VerifyBooking = (data) => {
           errMassage: "Missing parameter",
         });
       } else {
-        let res = await db.Booking.findOne({
+        let res = await db.Bookings.findOne({
           where: {
             doctorId: data.doctorId,
             token: data.token,
@@ -137,7 +137,7 @@ let VerifyBooking = (data) => {
         }
       }
     } catch (error) {
-      console.log(">>", error);
+      console.log(">VerifyBooking-error:", error);
 
       reject(error);
     }
@@ -152,7 +152,7 @@ let PatientBooked = (data) => {
           errMassage: "Missing parameter",
         });
       } else {
-        let res = await db.Booking.findAll({
+        let res = await db.Bookings.findAll({
           where: {
             doctorId: data.doctorId,
             date: data.date,
@@ -194,8 +194,7 @@ let PatientBooked = (data) => {
         }
       }
     } catch (error) {
-      console.log(">>", error);
-
+      console.log("PatientBooked-error:", error);
       reject(error);
     }
   });

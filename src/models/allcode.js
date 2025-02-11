@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "paymentId",
         as: "paymentTypeData",
       });
-      AllCode.hasOne(models.Booking, {
+      AllCode.hasOne(models.Bookings, {
         foreignKey: "timeType",
         targetKey: "keyMap",
         as: "timeData",
