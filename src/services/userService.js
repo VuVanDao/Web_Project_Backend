@@ -78,7 +78,7 @@ let handleGetAllUser = async (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
       let users = "";
-      if (userId === "ALL" || userId === "all") {
+      if (userId === "ALL" || userId === "all" || userId === "All") {
         let data = await db.User.findAll({
           raw: true,
           attributes: {
@@ -151,28 +151,34 @@ let handleCreateNewUser = async (data) => {
       let hashPassword = await hashUserPassword(data.password);
       let checkUserEmailIsExist = await checkUserEmail(data.email);
       if (!checkUserEmailIsExist) {
-        let user = await db.User.create({
-          email: data.email,
-          password: hashPassword,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          address: data.address,
-          phoneNumber: data.phoneNumber,
-          gender: data.gender,
-          roleId: data.roleId,
-          positionId: data.positionId,
-          image: data.image,
-        });
-        if (!user) {
-          resolve({
-            errCode: 1,
-            errMessage: "Cannot create user, something happened",
+        try {
+          let user = await db.User.create({
+            email: data.email,
+            password: hashPassword,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            address: data.address,
+            phoneNumber: data.phoneNumber,
+            gender: data.gender,
+            roleId: data.roleId,
+            positionId: data.positionId,
+            image: data.image,
           });
-        } else {
-          resolve({
-            errCode: 0,
-            errMessage: "User created",
-          });
+
+          if (!user) {
+            resolve({
+              errCode: 1,
+              errMessage: "Cannot create user, something happened",
+            });
+          } else {
+            resolve({
+              errCode: 0,
+              errMessage: "User created",
+            });
+          }
+        } catch (error) {
+          console.log(">>>", error);
+          reject(error);
         }
       } else {
         resolve({
@@ -262,13 +268,14 @@ let getAllCodeService = async (type) => {
       } else {
         let data = {};
         let result = await db.AllCode.findAll({
-          raw: true,
+          // raw: true,
           where: { type: type },
           attributes: {
             exclude: ["createdAt", "updatedAt"],
           },
         });
-        // console.log("result", result);
+        // console.log("data", data);
+
         if (result) {
           data.errCode = 0;
           data.errMessage = "Get all code success";
@@ -359,6 +366,8 @@ let getAllDoctor = async () => {
       }
       resolve(result);
     } catch (error) {
+      console.log("error");
+
       reject(error);
     }
   });
@@ -538,9 +547,6 @@ let getDetailDoctor = async (id) => {
             data: {},
           });
         } else {
-          if (data.image) {
-            data.image = new Buffer(data.image, "base64").toString("binary");
-          }
           if (
             dataDoctor &&
             dataDoctor.priceTypeData &&
@@ -871,7 +877,7 @@ let GetDoctorByProvince = (id) => {
           } else {
             let data = await db.Doctor_info.findAll({
               where: {
-                provinceID: id.provinceId,
+                provinceId: id.provinceId,
                 specialtyId: id.specialtyId,
               },
               raw: true,
@@ -922,7 +928,7 @@ let GetDoctorByProvince = (id) => {
           } else {
             let data = await db.Doctor_info.findAll({
               where: {
-                provinceID: id.provinceId,
+                provinceId: id.provinceId,
                 clinicId: id.specialtyId,
               },
               raw: true,

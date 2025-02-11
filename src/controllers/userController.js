@@ -18,31 +18,39 @@ let handleLogin = async (req, res) => {
   });
 };
 let handleGetAllUser = async (req, res) => {
-  let id = req.query.id; //all,id
-  if (!id) {
-    return res.status(200).json({
-      errCode: 2,
-      errMessage: "Missing id",
-      userData: {},
-    });
-  }
-  let users = await userService.handleGetAllUser(id);
-  return res.status(200).json({
-    errCode: users.errCode,
-    errMessage: users.errMessage,
-    userData: users.users,
-  });
-};
-let handleCreateNewUser = async (req, res) => {
-  if (req.body) {
-    let result = await userService.handleCreateNewUser(req.body);
-    if (result) {
+  try {
+    let id = req.query.id; //all,id
+    if (!id) {
       return res.status(200).json({
-        errCode: result.errCode,
-        errMessage: result.errMessage,
+        errCode: 2,
+        errMessage: "Missing id",
+        userData: {},
       });
     }
-  } else {
+    let users = await userService.handleGetAllUser(id);
+    return res.status(200).json({
+      errCode: users.errCode,
+      errMessage: users.errMessage,
+      userData: users.users,
+    });
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+let handleCreateNewUser = async (req, res) => {
+  try {
+    if (req.body) {
+      let result = await userService.handleCreateNewUser(req.body);
+      if (result) {
+        return res.status(200).json({
+          errCode: result.errCode,
+          errMessage: result.errMessage,
+        });
+      }
+    }
+  } catch (error) {
+    console.log("error", error);
+
     return res.status(200).json({
       errCode: 1,
       errMessage: "No data to create user",
@@ -83,7 +91,7 @@ let getAllCode = async (req, res) => {
     let data = await userService.getAllCodeService(req.query.type);
     return res.status(200).json(data);
   } catch (error) {
-    console.log("Error at userController: " + error);
+    console.log("Error at userController1: " + error);
     return res.status(200).json(data);
   }
 };

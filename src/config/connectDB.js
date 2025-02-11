@@ -9,7 +9,17 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: process.env.DB_DIALECT,
+    port: process.env.DB_PORT,
     logging: false,
+    dialectOptions:
+      process.env.DB_SSL === "true"
+        ? {
+            ssl: {
+              require: true,
+              rejectUnauthorized: false,
+            },
+          }
+        : {},
   }
 );
 let connectDB = async () => {

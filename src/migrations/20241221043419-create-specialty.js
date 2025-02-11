@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.TEXT("long"),
       },
       image: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT("long"),
       },
       createdAt: {
         allowNull: false,
